@@ -1,21 +1,10 @@
-import SwiftUI
+import UIKit
 
-@main
-struct MyDashboardStructuredApp: App {
-    @StateObject var habitDataStore = HabitDataStore()
-    @StateObject var diaryDataStore = DiaryDataStore()   // Раскомментировано
-    @StateObject var taskDataStore = TaskDataStore()     // Раскомментировано
-    @StateObject var financeDataStore = FinancialDataStore()
-    @StateObject var bodyDataStore = BodyDataStore()     // Раскомментировано
-
-    var body: some Scene {
-        WindowGroup {
-            MainDashboardView()
-                .environmentObject(habitDataStore)
-                .environmentObject(diaryDataStore)    // Раскомментировано
-                .environmentObject(taskDataStore)     // Раскомментировано
-                .environmentObject(financeDataStore)
-                .environmentObject(bodyDataStore)     // Раскомментировано
-        }
-    }
+// @main // Ensure @main is in AppDelegate.swift
+class MyDashboardStructuredApp {
+    // This class is no longer the entry point of the application.
+    // Its previous responsibilities (like initializing data stores)
+    // will need to be moved to AppDelegate or SceneDelegate,
+    // or managed by the relevant ViewControllers.
+    // For now, it's empty. It can be removed if not needed later.
 }

@@ -101,6 +101,11 @@ struct Habit: Identifiable, Codable, Hashable, Equatable {
         Color(hex: colorHex) ?? .gray // Используем расширение
     }
 
+    // Вычисляемое свойство для UIColor из HEX
+    var uiColor: UIColor {
+        UIColor(hex: colorHex) ?? .gray // Используем расширение для UIColor
+    }
+
     init(id: UUID = UUID(),
          name: String,
          description: String? = nil,
@@ -140,5 +145,37 @@ struct Habit: Identifiable, Codable, Hashable, Equatable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+}
+
+// Расширение для UIColor для инициализации из HEX-строки
+// Это расширение может быть вынесено в отдельный файл утилит, если используется в других местах.
+extension UIColor {
+    convenience init?(hex: String) {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
+
+        var rgb: UInt64 = 0
+
+        guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else {
+            return nil
+        }
+
+        let red, green, blue, alpha: CGFloat
+        if hexSanitized.count == 6 {
+            red = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
+            green = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
+            blue = CGFloat(rgb & 0x0000FF) / 255.0
+            alpha = 1.0
+        } else if hexSanitized.count == 8 { // With alpha
+            red = CGFloat((rgb & 0xFF000000) >> 24) / 255.0
+            green = CGFloat((rgb & 0x00FF0000) >> 16) / 255.0
+            blue = CGFloat((rgb & 0x0000FF00) >> 8) / 255.0
+            alpha = CGFloat(rgb & 0x000000FF) / 255.0
+        } else {
+            return nil // Invalid length
+        }
+
+        self.init(red: red, green: green, blue: blue, alpha: alpha)
     }
 }
